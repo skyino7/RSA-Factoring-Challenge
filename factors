@@ -4,39 +4,29 @@ import sys
 
 
 def factorize(n):
-    factors = []
-    for i in range(2, n + 1):
-        while n % i == 0:
-            factors.append(i)
-            n //= i
-    return factors
+    for i in range(2, n):
+        if n % i == 0:
+            return i, n // i
+    return None, None
 
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        return
-
-    inputFile = sys.argv[0]
-
+def main(filename):
     try:
-        with open(inputFile, 'r') as file:
+        with open(filename, 'r') as file:
             for line in file:
-                num = int(line.strip())
-                if num <= 1:
-                    print(f"Invalid input: {num} (must be greater than 1)")
-                    continue
-
-                factors = factorize(num)
-                if len(factors) < 2:
-                    print(f"No valid factorization for {num}")
-                else:
-                    p, q = factors[0], factors[1]
-                    print(f"{num}={p}*{q}")
-
+                n = int(line.strip())
+                fact1, fact2 = factorize(n)
+                print(f"{n}={fact1}*{fact2}")
     except FileNotFoundError:
-        print(f"File not found: {inputFile}")
+        print(f"Error: File '{filename}' not found.")
+    except ValueError:
+        print("Error: Invalid input.Please make sure all lines contain valid natural numbers greater than 1.")
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+    main(filename)
